@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="cwb@210.28.134.35:22 password" autoUploadExternalChanges="true">
+    <serverData>
+      <paths name="cwb@210.28.134.35:22 password">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="cwb@210.28.134.35:22 password (1)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/cwb/pycharm/Mountain_car" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
