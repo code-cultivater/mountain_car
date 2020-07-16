@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 import gym
-
+from manager_gpu import  device
 # Hyper Parameters
 BATCH_SIZE = 32
 LR = 0.01                   # learning rate
@@ -35,7 +35,7 @@ class Net(nn.Module):
 
 class DQN(object):
     def __init__(self):
-        self.eval_net, self.target_net = Net(), Net()
+        self.eval_net, self.target_net = Net().to(device), Net().to(device)
 
         self.learn_step_counter = 0                                     # for target updating
         self.memory_counter = 0                                         # for storing memory
@@ -45,11 +45,11 @@ class DQN(object):
 
     def choose_action(self, x):
         #global EPSILON
-        x = torch.unsqueeze(torch.FloatTensor(x), 0)
+        x = torch.unsqueeze(torch.FloatTensor(x), 0).to(device)
         # input only one sample
         if np.random.uniform() < EPSILON:   # greedy
             actions_value = self.eval_net.forward(x)
-            action = torch.max(actions_value, 1)[1].data.numpy()
+            action = torch.max(actions_value, 1)[1].cpu().data.numpy()
             action = action[0] if ENV_A_SHAPE == 0 else action.reshape(ENV_A_SHAPE)  # return the argmax index
         else:   # random
             action = np.random.randint(0, N_ACTIONS)
@@ -73,10 +73,10 @@ class DQN(object):
         # sample batch transitions
         sample_index = np.random.choice(MEMORY_CAPACITY, BATCH_SIZE)
         b_memory = self.memory[sample_index, :]
-        b_s = torch.FloatTensor(b_memory[:, :N_STATES])
-        b_a = torch.LongTensor(b_memory[:, N_STATES:N_STATES+1].astype(int))
-        b_r = torch.FloatTensor(b_memory[:, N_STATES+1:N_STATES+2])
-        b_s_ = torch.FloatTensor(b_memory[:, -N_STATES:])
+        b_s = torch.FloatTensor(b_memory[:, :N_STATES]).to(device)
+        b_a = torch.LongTensor(b_memory[:, N_STATES:N_STATES+1].astype(int)).to(device)
+        b_r = torch.FloatTensor(b_memory[:, N_STATES+1:N_STATES+2]).to(device)
+        b_s_ = torch.FloatTensor(b_memory[:, -N_STATES:]).to(device)
 
         # q_eval w.r.t the action in experience
         q_eval = self.eval_net(b_s).gather(1, b_a)  # shape (batch, 1)
@@ -120,7 +120,7 @@ for iter in range(TrainTimes):
             if dqn.memory_counter > MEMORY_CAPACITY:
                 dqn.learn(t)
 
-            steps += 1
+            steps += 1;
 
             if done or steps >= 20000:
                 t += 1

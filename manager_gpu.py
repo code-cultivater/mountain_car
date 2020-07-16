@@ -6,7 +6,7 @@ Created on Tue Aug 22 19:41:55 2017
 '''
 Example:
 gm=GPUManager()
-with torch.cuda.device(gm.auto_choice())
+with torch.cuda.device(gm.auto_choice())：
     blabla
 Or:
 gm=GPUManager()
@@ -150,3 +150,7 @@ if check_gpus():
             return int(index)
 else:
     raise ImportError('GPU available check failed')
+
+
+gm=GPUManager()
+device = torch.device(gm.auto_choice())

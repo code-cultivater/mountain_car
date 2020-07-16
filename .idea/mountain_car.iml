@@ -5,4 +5,7 @@
     <orderEntry type="jdk" jdkName="Remote Python 3.7.6 (sftp://cwb@210.28.134.35:22/home/cwb/anaconda3/envs/mountain_car/bin/python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
+  <component name="PyDocumentationSettings">
+    <option name="renderExternalDocumentation" value="true" />
+  </component>
 </module>
