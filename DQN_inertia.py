@@ -3,9 +3,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 import gym
+import time
 from manager_gpu import  device
 # Hyper Parameters
-BATCH_SIZE = 32
+BATCH_SIZE = 3200
 LR = 0.01                   # learning rate
 EPSILON = 0.8              # greedy policy
 GAMMA = 0.9                 # reward discount
@@ -96,10 +97,12 @@ for iter in range(TrainTimes):
     t = 0
     episodes_rewards = []
     print('\nCollecting experience...')
-    for i_episode in range(400):
+
+    for i_episode in range(100):
         s = env.reset()
         ep_r = 0
         steps = 0
+        since = time.time()
         while True:
             #env.render()
             a = dqn.choose_action(s)
@@ -118,7 +121,9 @@ for iter in range(TrainTimes):
 
             ep_r += r
             if dqn.memory_counter > MEMORY_CAPACITY:
+
                 dqn.learn(t)
+
 
             steps += 1;
 
@@ -129,5 +134,9 @@ for iter in range(TrainTimes):
                       '| Ep_r: ', round(ep_r, 2))
                 break
             s = s_
+        time_elapsed = time.time() - since
+        print('Training complete in {:.0f}m {:.0f}s'.format(
+        time_elapsed // 60, time_elapsed % 60))  # 打印出来时间
     train_rewards.append(episodes_rewards)
+
 np.savetxt("DQN_inert",train_rewards)
